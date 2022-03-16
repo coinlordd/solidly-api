@@ -1,13 +1,17 @@
 const redis = require("redis");
 
-const redisOptions = {
-  socket: {
-    tls: process.env.NODE_ENV === "production",
-    rejectUnauthorized: false,
-  },
-};
+const redisOptions =
+  process.env.NODE_ENV === "production"
+    ? {
+        url: process.env.REDIS_TLS_URL,
+        socket: {
+          tls: true,
+          rejectUnauthorized: false,
+        },
+      }
+    : process.env.REDIS_URL;
 
-const client = redis.createClient(process.env.REDIS_URL, redisOptions);
+const client = redis.createClient(redisOptions);
 
 client.connect();
 
