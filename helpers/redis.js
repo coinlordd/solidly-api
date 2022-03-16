@@ -10,13 +10,9 @@ const redisOptions =
           rejectUnauthorized: false,
         },
       }
-    : {
-        url: process.env.REDIS_URL,
-        socket: {
-          tls: false,
-          rejectUnauthorized: false,
-        },
-      };
+    : null;
+
+console.log(process.env.REDIS_URL);
 
 const client = redis.createClient(redisOptions);
 
