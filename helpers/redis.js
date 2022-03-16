@@ -1,18 +1,23 @@
 const redis = require("redis");
 const asyncRedis = require("async-redis");
+const url = require("url");
 
-let config =
-  process.env.NODE_ENV === "production" && process.env.REDIS_URL
-    ? {
-        url: process.env.REDIS_URL,
-        socket: {
-          tls: true,
-          rejectUnauthorized: false,
-        },
-      }
-    : null;
+const REDIS_URL = process.env.REDIS_URL;
+const redis_uri = url.parse(REDIS_URL);
 
-const client = redis.createClient(config);
+const redisOptions = REDIS_URL.includes("rediss://")
+  ? {
+      port: Number(redis_uri.port),
+      host: redis_uri.hostname,
+      password: redis_uri.auth.split(":")[1],
+      db: 0,
+      tls: {
+        rejectUnauthorized: false,
+      },
+    }
+  : REDIS_URL;
+
+const client = redis.createClient(redisOptions);
 
 client.connect();
 
