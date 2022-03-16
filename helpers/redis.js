@@ -1,33 +1,22 @@
-const config = require('../config')
-const redis = require('redis');
+const redis = require("redis");
+const asyncRedis = require("async-redis");
 
-const RedisClient = redis.createClient({
-  url: `redis://${config.redis.host}:${config.redis.port}`
-})
+const client = redis.createClient({
+  url: process.env.REDIS_URL,
+  socket: {
+    tls: true,
+    rejectUnauthorized: false,
+  },
+});
 
-const connect = async () => {
-  try {
+client.on("error", (error) => {
+  console.error("Redis error encountered: ", error);
+});
 
-    let connected = false
-    try {
-      const pong = await RedisClient.ping()
-      if(pong == 'PONG') {
-        connected = true
-      }
-    } catch(ex) {
-      console.log(ex)
-    }
-
-    if(!connected) {
-      await RedisClient.connect();
-    }
-
-    return RedisClient
-  } catch (ex) {
-    console.log(ex)
-  }
-}
+client.on("connect", () => {
+  console.log("Redis connection established");
+});
 
 module.exports = {
-  connect
-}
+  RedisClient: asyncRedis.decorate(client),
+};
