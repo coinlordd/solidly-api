@@ -1,5 +1,4 @@
 const request = require("request-promise");
-const CoinGecko = require("coingecko-api");
 const Web3 = require("web3");
 const config = require("../config");
 const { RedisClient } = require("../helpers/redis");
@@ -8,7 +7,6 @@ const fs = require("fs");
 const Multicall = require("@dopex-io/web3-multicall");
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-const CoinGeckoClient = new CoinGecko();
 
 let CONTRACTS = null;
 if (config.testnet === "1") {
