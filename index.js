@@ -5,6 +5,20 @@ const routes = require("./routes/routes");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const https = require("https");
+const auth = require("http-auth");
+
+/*  QTdEQTlBMDUwNzMxMTE3MDBFNDcyMTEwODBCOUE5RkEyMzFFNjMyMDhEMTc0NjQ1MEJGMkZDREVCNTU4OTlFQTowQTZDMkQyMkYxNDcwOTNFQ0NERUFFMzE4MTQ5NUE2RjUyNkUzREI1NzBDMkVFQTkzREI5QzEwOEZBQkNFOTc5 */
+var basic = auth.basic(
+  { realm: "solidly.vision" },
+  function (username, password, callback) {
+    callback(
+      username ===
+        "A7DA9A05073111700E47211080B9A9FA231E63208D1746450BF2FCDEB55899EA" &&
+        password ===
+          "0A6C2D22F147093ECCDEAE3181495A6F526E3DB570C2EEA93DB9C108FABCE979"
+    );
+  }
+);
 
 var app = express();
 
@@ -14,7 +28,11 @@ app.all("/*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "POST,OPTIONS");
   // Set custom headers for CORS
-  res.header("Access-Control-Allow-Headers");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type,Accept,Authorization,Username,Password,Signature,X-Access-Token,X-Key"
+  );
+
   if (req.method == "OPTIONS") {
     res.status(200).end();
   } else {
@@ -31,6 +49,9 @@ app.all("/health", function (req, res, next) {
 });
 
 app.use(morgan("dev"));
+
+app.use(auth.connect(basic));
+
 app.use(helmet());
 app.use(compression());
 
@@ -61,6 +82,12 @@ function handleData(req, res) {
     res.json({
       status: res.statusCode,
       message: "Bad Request",
+    });
+  } else if (res.statusCode === 401) {
+    res.status(res.statusCode);
+    res.json({
+      status: res.statusCode,
+      message: "Unauthorized",
     });
   } else if (res.statusCode) {
     res.status(res.statusCode);
