@@ -2,7 +2,7 @@
   "name": "api.solidly.exchange",
   "version": "1.0.0",
   "engines": {
-    "node": "0.16.1"
+    "node": "16.13.1"
   },
   "description": "API for solidly",
   "main": "index.js",
