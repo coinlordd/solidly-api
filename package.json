@@ -14,7 +14,6 @@
   "license": "ISC",
   "dependencies": {
     "@dopex-io/web3-multicall": "^0.1.5",
-    "async-redis": "^2.0.0",
     "bignumber.js": "^9.0.2",
     "body-parser": "^1.17.2",
     "compression": "^1.7.0",
