@@ -12,11 +12,7 @@ const redisOptions =
       }
     : null;
 
-console.log(process.env.REDIS_URL);
-
 const client = redis.createClient(redisOptions);
-
-client.connect();
 
 client.on("error", (error) => {
   console.error("Redis error encountered: ", error);
