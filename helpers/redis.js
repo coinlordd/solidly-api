@@ -1,15 +1,13 @@
 const redis = require("redis");
-const asyncRedis = require("async-redis");
 
 const redisOptions = {
-  url: process.env.REDIS_URL,
   socket: {
-    tls: true,
+    tls: process.env.NODE_ENV === "production",
     rejectUnauthorized: false,
   },
 };
 
-const client = redis.createClient(redisOptions);
+const client = redis.createClient(process.env.REDIS_URL, redisOptions);
 
 client.connect();
 
@@ -22,5 +20,5 @@ client.on("connect", () => {
 });
 
 module.exports = {
-  RedisClient: asyncRedis.decorate(client),
+  RedisClient: client,
 };
