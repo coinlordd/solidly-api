@@ -11,6 +11,8 @@ const redisOptions = {
 
 const client = redis.createClient(redisOptions);
 
+client.connect();
+
 client.on("error", (error) => {
   console.error("Redis error encountered: ", error);
 });
