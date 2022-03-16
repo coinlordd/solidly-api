@@ -4,6 +4,7 @@ const routes = require("./routes/routes");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const https = require("https");
+const { env } = require("process");
 
 var app = express();
 
@@ -100,13 +101,12 @@ app.use(function (err, req, res) {
   }
 });
 
-var options = {};
 https.globalAgent.maxSockets = 50;
-app.set("port", 80);
+
 var server = null;
 server = require("http").Server(app);
-server.listen(app.get("port"), function () {
-  console.log("api.solidly.exchange", server.address().port);
+server.listen(process.env.PORT, function () {
+  console.log("Running server on port", process.env.PORT);
   module.exports = server;
 });
 
